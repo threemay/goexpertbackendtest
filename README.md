@@ -1,5 +1,9 @@
 Repo for GoExperts backend sources without a pipeline. You need to construct a new one.
 
+npm i
+
+
+
 npm run build
 
 
