@@ -14,6 +14,10 @@ npm run start
 .env
 
 
+docker build -t your-dockerhub-username/your-app-name:1.0 .
+
+
+
 
 
 1. The resources for deployment the frontend should be first constructed by IaC tools like Terraform, CloudFormation, Ansible etc. 
