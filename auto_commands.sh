@@ -6,8 +6,9 @@
 set -e
 
 # get git tag
-git_tag=$(git describe --tags --abbrev=0)
+# git_tag=$(git describe --tags --abbrev=0)
 
+git_tag=1.2
 
 echo $git_tag
 # build docker image
