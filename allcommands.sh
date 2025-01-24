@@ -13,3 +13,5 @@ docker run -d -p 3001:3001 \
 -e PORT=3001 \
 threemay/goexpertbackendtest:1.0
 
+mongosh "mongodb://localhost:27017"
+
