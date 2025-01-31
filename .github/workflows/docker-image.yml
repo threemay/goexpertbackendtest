@@ -44,6 +44,7 @@ jobs:
           # export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
           # export AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}
           aws sts get-caller-identity
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/a9h1i7z6
           docker build -t threemay/goexpertbackendtest:latest1 .
           docker tag threemay/goexpertbackendtest:latest1 public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest1
           docker push public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest1
