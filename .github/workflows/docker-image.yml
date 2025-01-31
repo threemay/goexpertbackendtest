@@ -26,25 +26,37 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Log in to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+      - name: Login to Amazon ECR Public
+        id: login-ecr-public
+        uses: aws-actions/amazon-ecr-login@v2
+        with:
+          registry-type: public
+
+      - name: Build, tag, and push docker image to Amazon ECR Public
+        env:
+          REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+          REGISTRY_ALIAS: a9h1i7z6
+          REPOSITORY: threemay/goexpertbackendtest
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
 
       # - name: Build Docker image
       #   run: |
       #     docker build -t threemay/goexpertbackendtest .
 
-      - name: Build, tag, and push image to ECR
-        env:
-          ECR_REGISTRY: <your-aws-account-id>.dkr.ecr.<region>.amazonaws.com
-          ECR_REPOSITORY: <your-repository-name>
-          IMAGE_TAG: latest
-        run: |
-          # export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
-          # export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          # export AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}
-          aws sts get-caller-identity
-          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/a9h1i7z6
-          docker build -t threemay/goexpertbackendtest:latest1 .
-          docker tag threemay/goexpertbackendtest:latest1 public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest1
-          docker push public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest1
+      # - name: Build, tag, and push image to ECR
+      #   env:
+      #     ECR_REGISTRY: <your-aws-account-id>.dkr.ecr.<region>.amazonaws.com
+      #     ECR_REPOSITORY: <your-repository-name>
+      #     IMAGE_TAG: latest
+      #   run: |
+      #     # export AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     # export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     # export AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}
+      #     aws sts get-caller-identity
+      #     aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/a9h1i7z6
+      #     docker build -t threemay/goexpertbackendtest:latest1 .
+      #     docker tag threemay/goexpertbackendtest:latest1 public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest1
+      #     docker push public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest1
