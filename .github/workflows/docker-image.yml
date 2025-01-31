@@ -30,9 +30,9 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build Docker image
-        run: |
-          docker build -t threemay/goexpertbackendtest .
+      # - name: Build Docker image
+      #   run: |
+      #     docker build -t threemay/goexpertbackendtest .
 
       - name: Build, tag, and push image to ECR
         env:
@@ -46,6 +46,6 @@ jobs:
           unzip awscliv2.zip
           sudo ./aws/install
           aws --version
-          
+
           docker tag threemay/goexpertbackendtest:latest public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest
           docker push public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest
