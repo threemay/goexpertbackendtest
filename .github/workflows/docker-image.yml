@@ -44,6 +44,6 @@ jobs:
           export AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}
           export AWS_SESSION_TOKEN=${{ secrets.AWS_SESSION_TOKEN }}
           aws sts get-caller-identity
-          # docker build -t threemay/goexpertbackendtest:latest .
-          # docker tag threemay/goexpertbackendtest:latest public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest
-          # docker push public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest
+          docker build -t threemay/goexpertbackendtest:latest .
+          docker tag threemay/goexpertbackendtest:latest public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest
+          docker push public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest
