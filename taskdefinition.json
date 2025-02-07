@@ -1,0 +1,115 @@
+{
+  "containerDefinitions": [
+    {
+      "name": "mongodb",
+      "image": "mongo:latest",
+      "cpu": 256,
+      "memory": 512,
+      "portMappings": [
+        {
+          "name": "mongodb-27017-tcp",
+          "containerPort": 27017,
+          "hostPort": 27017,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/testbackendshuo",
+          "mode": "non-blocking",
+          "awslogs-create-group": "true",
+          "max-buffer-size": "25m",
+          "awslogs-region": "ap-southeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "systemControls": []
+    },
+    {
+      "name": "testapplication",
+      "image": "public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:edd0afb644c1f8e48216482e620803d79f999648",
+      "cpu": 256,
+      "memory": 512,
+      "portMappings": [
+        {
+          "name": "testapplication-8080-tcp",
+          "containerPort": 80,
+          "hostPort": 80,
+          "protocol": "tcp"
+        }
+      ],
+      "essential": true,
+      "environment": [
+        {
+          "name": "PORT",
+          "value": "80"
+        },
+        {
+          "name": "CONNECTION_STRING",
+          "value": "mongodb://localhost:27017/goexpert"
+        },
+        {
+          "name": "BACKEND_HOST_ADDRESS",
+          "value": "http://localhost:80"
+        }
+      ],
+      "dependsOn": [
+        {
+          "containerName": "mongodb",
+          "condition": "START"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/testbackendshuo",
+          "mode": "non-blocking",
+          "awslogs-create-group": "true",
+          "max-buffer-size": "25m",
+          "awslogs-region": "ap-southeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ],
+  "family": "testbackendshuo",
+  "taskRoleArn": "arn:aws:iam::xxxxxxxx:role/ecsTaskRole",
+  "executionRoleArn": "arn:aws:iam::xxxxxx:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "status": "ACTIVE",
+  "requiresAttributes": [
+    {
+      "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+    },
+    {
+      "name": "ecs.capability.execution-role-awslogs"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.28"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.task-iam-role"
+    },
+    {
+      "name": "ecs.capability.container-ordering"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+    },
+    {
+      "name": "ecs.capability.task-eni"
+    },
+    {
+      "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+    }
+  ],
+  "compatibilities": ["EC2", "FARGATE"],
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048"
+}
