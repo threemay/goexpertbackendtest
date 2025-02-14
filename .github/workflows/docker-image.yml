@@ -28,22 +28,40 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: ${{ secrets.AWS_REGION }}
-
-      - name: Login to Amazon ECR Public
-        id: login-ecr-public
-        uses: aws-actions/amazon-ecr-login@v2
+      
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
         with:
-          registry-type: public
+          terraform_version: 1.0.0
 
-      - name: Build, tag, and push docker image to Amazon ECR Public
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
         env:
-          REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
-          REGISTRY_ALIAS: a9h1i7z6
-          REPOSITORY: threemay/goexpertbackendtest
-          IMAGE_TAG: ${{ github.sha }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_SESSION_TOKEN: ${{ secrets.AWS_SESSION_TOKEN }}
+          AWS_REGION: ${{ secrets.AWS_REGION }}
         run: |
-          docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
-          docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
+          terraform init
+          terraform apply -auto-approve
+
+      # - name: Login to Amazon ECR Public
+      #   id: login-ecr-public
+      #   uses: aws-actions/amazon-ecr-login@v2
+      #   with:
+      #     registry-type: public
+
+      # - name: Build, tag, and push docker image to Amazon ECR Public
+      #   env:
+      #     REGISTRY: ${{ steps.login-ecr-public.outputs.registry }}
+      #     REGISTRY_ALIAS: a9h1i7z6
+      #     REPOSITORY: threemay/goexpertbackendtest
+      #     IMAGE_TAG: ${{ github.sha }}
+      #   run: |
+      #     docker build -t $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG .
+      #     docker push $REGISTRY/$REGISTRY_ALIAS/$REPOSITORY:$IMAGE_TAG
 
       # - name: Build Docker image
       #   run: |
@@ -63,3 +81,4 @@ jobs:
       #     docker build -t threemay/goexpertbackendtest:latest1 .
       #     docker tag threemay/goexpertbackendtest:latest1 public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest1
       #     docker push public.ecr.aws/a9h1i7z6/threemay/goexpertbackendtest:latest1
+
