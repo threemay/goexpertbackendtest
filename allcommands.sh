@@ -15,5 +15,8 @@ threemay/goexpertbackendtest:1.0
 
 mongosh "mongodb://localhost:27017"
 
-pip install requests -t ./
+# pip install requests -t ./
+
+pip install -r requirements.txt
+
 
