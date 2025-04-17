@@ -8,9 +8,17 @@ import { jwtSign } from "../utils/jwtService";
 // import { emailTemplate, sendEmail } from "../utils/emailService";
 import generateToken from "../utils/tokenGenerator";
 
-const getUsers = (req: Request, res: Response): void => {
-  res.send("respond with a resource");
-};
+
+const getUsers: RequestHandler = async (req: Request, res: Response) => {
+    try {
+      const users = await User.find({});
+      return res.status(200).json(users);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ error: "Server error" });
+    }
+  };
+  
 
 /**
  * POST api/users

@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  web:
+    image: node:22
+    container_name: web_app
+    working_dir: /app
+    volumes:
+      - .:/app
+    ports:
+      - "3001:3001"
+    command: sh -c "npm install && npm run build && npm run start"
+    environment:
+      - CONNECTION_STRING=mongodb://mongo111:27017/goexpert
+      - BACKEND_HOST_ADDRESS=http://localhost:3001
+      - PORT=3001
+    depends_on:
+      - mongo111
+
+  mongo111:
+    image: mongo:latest
+    container_name: mongo_db
+    ports:
+      - "27017:27017"
+#     volumes:
+#       - mongo-data:/data/db
+
+# volumes:
+#   mongo-data:
